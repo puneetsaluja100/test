@@ -6,6 +6,8 @@ public class Building {
     String name;
     List<Floor> floors;
 
+    List<Elevator> elevators;
+
     public String getName() {
         return name;
     }
@@ -20,5 +22,13 @@ public class Building {
 
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
+    }
+
+    public List<Elevator> getElevators() {
+        return elevators;
+    }
+
+    public void setElevators(List<Elevator> elevators) {
+        this.elevators = elevators;
     }
 }

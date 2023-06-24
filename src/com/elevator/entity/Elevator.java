@@ -20,6 +20,10 @@ public class Elevator {
 
     private List<ElevatorRequest> downPendingJobs = new ArrayList<>();
 
+    public Elevator(int elevatorId) {
+        this.elevatorId = elevatorId;
+    }
+
     public void startElevator() {
         while (true) {
             if (!currentJobs.isEmpty()) {
@@ -52,12 +56,12 @@ public class Elevator {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println("Elevator reached on floor -- " + i);
+                System.out.println("Elevator" + elevatorId + "reached on floor -- " + i);
                 currentFloor = i;
             }
         }
 
-        System.out.println("Reached Requested source Floor--opening door");
+        System.out.println("Elevator " + elevatorId+" Reached Requested source Floor--opening door");
 
         startFloor = currentFloor;
 
@@ -68,7 +72,7 @@ public class Elevator {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println("Elevator reached destination floor -- " + i);
+            System.out.println("Elevator " + elevatorId+"  reached destination floor -- " + i);
             currentFloor = i;
             if (checkIfNewJobCanBeProcessed(request)) {
                 break;
@@ -88,7 +92,7 @@ public class Elevator {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println("Elevator reached on floor -- " + i);
+                System.out.println("Elevator " + elevatorId+"  reached on floor -- " + i);
                 currentFloor = i;
             }
         }
@@ -104,7 +108,7 @@ public class Elevator {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println("Elevator reached destination floor -- " + i);
+            System.out.println("Elevator  " + elevatorId+ "  reached destination floor -- " + i);
             currentFloor = i;
             if (checkIfNewJobCanBeProcessed(request)) {
                 break;
@@ -154,7 +158,7 @@ public class Elevator {
 
 
     public void addJob(ElevatorRequest request) {
-        System.out.println("Lift is currently on floor : "+ currentFloor + " state: "+state);
+        System.out.println( "Elevator"  + elevatorId +"Lift is currently on floor : "+ currentFloor + " state: "+state);
         if (state == ElevatorState.IDLE) {
             state = ElevatorState.MOVING;
             direction = request.getExternalRequest().getDirection();
