@@ -6,6 +6,7 @@ import com.elevator.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class Elevator {
     private int elevatorId = 1;
@@ -28,6 +29,14 @@ public class Elevator {
                     if (currentJobs.isEmpty()) {
                         addPendingDownJobsToCurrentJobs();
                     }
+                }
+                if (direction == Direction.DOWN) {
+                    ElevatorRequest request = pollRequestForDownDirection();
+                    processDownRequest(request);
+                    if (currentJobs.isEmpty()) {
+                        addPendingUpJobsToCurrentJobs();
+                    }
+
                 }
             }
         }
@@ -68,10 +77,48 @@ public class Elevator {
 
     }
 
+    private void processDownRequest(ElevatorRequest request) {
 
+        int startFloor = currentFloor;
+        if (startFloor < request.getExternalRequest().getSourceFloor()) {
+            for (int i = startFloor; i <= request.getExternalRequest().getSourceFloor(); i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                System.out.println("Elevator reached on floor -- " + i);
+                currentFloor = i;
+            }
+        }
+
+        System.out.println("Reached Requested source Floor--opening door");
+
+        startFloor = currentFloor;
+
+        for (int i = startFloor; i >= request.getInternalRequest().getDestinationFloor(); i--) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            System.out.println("Elevator reached destination floor -- " + i);
+            currentFloor = i;
+            if (checkIfNewJobCanBeProcessed(request)) {
+                break;
+            }
+        }
+
+    }
 
     private ElevatorRequest pollRequestForUpDirection() {
         return CollectionUtils.pollRequestForUpDirection(currentJobs);
+    }
+
+    private ElevatorRequest pollRequestForDownDirection() {
+        return CollectionUtils.pollRequestForDownDirection(currentJobs);
     }
 
     private boolean checkIfNewJobCanBeProcessed(ElevatorRequest currentRequest) {
@@ -88,6 +135,18 @@ public class Elevator {
 
             }
 
+            if (direction == Direction.DOWN) {
+                ElevatorRequest request = pollRequestForDownDirection();
+                if (request.getInternalRequest().getDestinationFloor() > currentRequest.getInternalRequest()
+                        .getDestinationFloor()) {
+                    currentJobs.add(request);
+                    currentJobs.add(currentRequest);
+                    return true;
+                }
+                currentJobs.add(request);
+
+            }
+
         }
         return false;
 
@@ -95,11 +154,13 @@ public class Elevator {
 
 
     public void addJob(ElevatorRequest request) {
+        System.out.println("Lift is currently on floor : "+ currentFloor + " state: "+state);
         if (state == ElevatorState.IDLE) {
             state = ElevatorState.MOVING;
             direction = request.getExternalRequest().getDirection();
             currentJobs.add(request);
         } else if (state == ElevatorState.MOVING) {
+
             if (request.getExternalRequest().getDirection() != direction) {
                 addtoPendingJobs(request);
             } else if (request.getExternalRequest().getDirection() == direction) {
@@ -112,8 +173,11 @@ public class Elevator {
                 } else {
                     currentJobs.add(request);
                 }
+
             }
+
         }
+
     }
 
     public void addtoPendingJobs(ElevatorRequest request) {
@@ -135,6 +199,18 @@ public class Elevator {
         }
 
     }
+
+    private void addPendingUpJobsToCurrentJobs() {
+        if (!upPendingJobs.isEmpty()) {
+            currentJobs = upPendingJobs;
+            direction = Direction.UP;
+        } else {
+            state = ElevatorState.IDLE;
+        }
+
+    }
+
+
 
     public int getElevatorId() {
         return elevatorId;

@@ -23,6 +23,16 @@ public class Main {
         ElevatorRequestExecutor elevatorRequestExecutor = new ElevatorRequestExecutor(elevator);
         Thread t2 = new Thread(elevatorRequestExecutor);
         t2.start();
+
+
+
+        ExternalRequest er3 = new ExternalRequest(Direction.DOWN, 0);
+        InternalRequest ir3= new InternalRequest(4);
+        ElevatorRequest request3 = new ElevatorRequest(ir3, er3);
+        elevator.addJob(request3);
+
+
+
     }
 }
 

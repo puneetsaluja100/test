@@ -23,4 +23,19 @@ public class CollectionUtils {
         currentJobs.remove(0);
         return request;
     }
+
+    public static ElevatorRequest pollRequestForDownDirection(List<ElevatorRequest> currentJobs) {
+
+        Collections.sort(currentJobs, new Comparator<ElevatorRequest>() {
+            @Override
+            public int compare(ElevatorRequest o1, ElevatorRequest o2) {
+                return o2.getInternalRequest().getDestinationFloor() - o1.getInternalRequest().getDestinationFloor();
+            }
+        });
+
+
+        ElevatorRequest request = currentJobs.get(0);
+        currentJobs.remove(0);
+        return request;
+    }
 }
