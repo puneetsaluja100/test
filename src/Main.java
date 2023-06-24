@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
+        //Considering building with 5 floors and 3 elevators
         Building building = new Building();
         building.setFloors(Arrays.asList(new Floor(1), new Floor(2), new Floor(3), new Floor(4), new Floor(5)));
         building.setElevators(getElevators());
@@ -20,31 +20,10 @@ public class Main {
         }
 
 
-
-
-        ExternalRequest er = new ExternalRequest(Direction.UP, 0);
-        InternalRequest ir = new InternalRequest(5);
-        ElevatorRequest request1 = new ElevatorRequest(ir, er);
-
-
-        ExternalRequest er2 = new ExternalRequest(Direction.UP, 2);
-        InternalRequest ir2= new InternalRequest(4);
-        ElevatorRequest request2 = new ElevatorRequest(ir2, er2);
-
-
-
-        ExternalRequest er3 = new ExternalRequest(Direction.DOWN, 0);
-        InternalRequest ir3= new InternalRequest(4);
-        ElevatorRequest request3 = new ElevatorRequest(ir3, er3);
-
-
-        ElevatorRequestManager elevatorRequestManager = new ElevatorRequestManager(building.getElevators());
-        elevatorRequestManager.placeRequest(request1);
-        elevatorRequestManager.placeRequest(request2);
-        elevatorRequestManager.placeRequest(request3);
-
-
-
+        ButtonPanel buttonPanel = new ButtonPanel(building);
+        buttonPanel.acceptUserRequest(0,5, Direction.UP);
+        buttonPanel.acceptUserRequest(2,4, Direction.UP);
+        buttonPanel.acceptUserRequest(0,4, Direction.DOWN);
     }
 
     public static List<Elevator> getElevators() {

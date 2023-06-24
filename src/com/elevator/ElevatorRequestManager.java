@@ -12,6 +12,7 @@ public class ElevatorRequestManager {
     static int counter = 0;
 
     public void placeRequest(ElevatorRequest elevatorRequest) {
+        //handles request in round robin fashion
         elevators.get(counter% elevators.size()).addJob(elevatorRequest);
         counter++;
     }
